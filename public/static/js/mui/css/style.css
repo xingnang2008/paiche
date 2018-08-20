@@ -1,0 +1,184 @@
+.ui-page-login,
+body {
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+.mui-content{height: 100%;}
+.line_title h1 {
+    font-size: 14px;
+    color: #007aff;
+}
+.line_title{
+	margin-bottom: 5px;
+}
+.mui-hot-brand {
+    overflow: hidden;
+    margin: 0 auto;
+   /* border: 1px solid #ddd;*/
+    border-radius: 6px;
+    background-color: #fff;
+    background-clip: padding-box;
+}
+.mui-hot-brand-view-cell {
+    margin: 0;
+    padding: 5px 5px;
+    vertical-align: top;
+    border-right: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+.index-nav-tubiao ul {
+    display: block;
+    overflow: hidden;
+	    padding: 0;
+}
+.index-nav-tubiao ul li {
+    width: 19%;
+    display: inline-table;
+    text-align: center;
+}
+.index-nav-tubiao ul a {
+    overflow: hidden;
+    display: block;
+}
+.index-nav-tubiao ul li span {
+    background: url(images/index_tb_1.png) no-repeat;
+    width: 100%;
+    height: 70px;
+    background-size: 87px auto;
+    display: block;
+}
+.index-nav-tubiao i{
+	font-size: small;
+}
+.index-nav-tubiao .nav-img01{ background-position:center -1px;}
+.index-nav-tubiao .nav-img02{ background-position:center -126px;}
+.index-nav-tubiao .nav-img03{ background-position:center -358px;}
+.index-nav-tubiao .nav-img04{ background-position:center -241px;}
+.index-nav-tubiao .nav-img05{ background-position:center -471px;}
+
+.index-nav-tubiao .nav-img06{ background:url(../images/index_tb2_1.png) no-repeat; background-position:center -1px;background-size:87px auto;}
+.index-nav-tubiao .nav-img07{background:url(../images/index_tb2_1.png) no-repeat; background-position:center -126px;background-size:87px auto;}
+.index-nav-tubiao .nav-img08{ background:url(../images/index_tb_1.png) no-repeat;background-position:center -735px;background-size:87px auto;}
+.index-nav-tubiao .nav-img09{ background:url(../images/index_tb_1.png) no-repeat;background-position:center -815px;background-size:87px auto;}
+.index-nav-tubiao .nav-img010{background:url(../images/index_tb2_1.png) no-repeat; background-position:center -471px;background-size:87px auto;}
+.index-nav-tubiao .nav-img011{ background-position:center -552px;background-size:87px auto;}
+.index-nav-tubiao .nav-img29{background:url(../images/index_tb2_1.png) no-repeat; background-position:center -563px;background-size:87px auto;}
+.index-nav-tubiao .nav-img012{  background:url(../images/index_tb_1.png) no-repeat;background-position:center -906px;background-size:87px auto;}
+.index-nav-tubiao .nav-img013{  background:url(../images/index_tb2_1.png) no-repeat;background-position:center -241px;background-size:87px auto;}
+.index-nav-tubiao .nav-img014{  background:url(../images/index_tb_1.png) no-repeat;background-position:center -991px;background-size:87px auto;}
+.bottom_div{
+	height: 80px;
+}
+.mui-card .mui-control-content {
+	padding: 10px;
+}
+
+.mui-control-content {
+	min-height: 500px;
+	
+}
+.pad_car_intro{
+	float: left;
+	width:60%;
+}
+.pad_car_intro h2{
+	font-size: small;
+}
+.pad_car_intro span{
+	font-size: small;
+}
+.pad_car_img{
+	float: left;
+	width:35%;
+}
+.div_text_center{
+	text-align: center;
+}
+.car-more {
+    float: right;
+    color: #4680d1;
+}
+.m-head {
+    background: #fff !important;
+    padding: 0 4px;
+}
+.amazeui.min_1.css:1
+.am-header-default {
+    background-color: #0e90d2;
+}
+.amazeui.min_1.css:1
+.am-header {
+    position: relative;
+    width: 100%;
+    height: 49px;
+    line-height: 49px;
+    padding: 0 10px;
+}
+.fl {
+    margin-top: 12px;
+    font-size: 15px;
+}
+#modal-content .mui-table-view li{
+	width: 30%;
+	float:left;
+	list-style-type: none;
+}
+#modal-content .mui-table-view {
+	border: none;
+}
+.che-fenlan-left{
+	width:50%;
+	float:left;
+	padding:5px;
+	text-align:center;
+}
+.che-fenlan-right{
+	width:50%;
+	float:right;
+	padding:5px;
+	border-left:1px solid #ccc;
+}
+.che-pai-img{
+	width:150px;
+	border-radius: 10px;
+}
+
+.seperator-line{
+	width:100%;
+	border-bottom:1px solid #f60;
+	margin-top:10px;	
+}
+.list-inline > li{display:inline-block;padding-right:5px;padding-left:5px;text-align:center;}
+.list-inline{margin:10px;}
+.pai-xx-ul{
+	
+}
+.pai-xx-ul-ul{
+	width:100%;
+	margin:0 auto;
+}
+.pai-xx-ul-ul li{
+	
+	text-align:center;
+}
+.person-img{
+	width:170px;
+	border-radius:170px;
+}
+.car-money {
+    font-size: 1.2rem;
+    color: #ff5837;
+    font-weight: bold;
+}
+.dong-money {
+    font-size: 1.2rem;
+    color: #804040;
+    font-weight: bold;
+}
+.img_add{
+	height:auto;
+	min-height:200px;
+	
+}
