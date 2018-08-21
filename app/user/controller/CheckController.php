@@ -21,21 +21,46 @@ use app\user\model\CheckInfosModel;
 use think\Model;
 use think\DB;
 
+define("NEW_CHECK_STATUS", 1);
+define("UP_CHECK_STATUS", 2);
+define("DONE_CHECK_STATUS", 3);
+
+
+
 class CheckController extends UserBaseController
 {
     /**
      * 个人中心我的资金列表
      */
+    
     public function index()
     {
-        $user = cmf_get_current_user();
-
-        $financeModel = new FinanceModel();
-        $finance    = $financeModel->where(['user_id' => cmf_get_current_user_id()])
-            ->order('action_time DESC')->paginate();
-        $this->assign($user);
-        $this->assign("page", $finance->render());
-        $this->assign("finance", $finance);
+        $user = cmf_get_current_user(); 
+        $this->check_role($user);
+        
+       $checkInfosModel = new CheckInfosModel();
+       $where = array();
+       $where['operator_id'] = $user['id'];
+       $where['status'] = NEW_CHECK_STATUS;
+       
+       $new_list = $checkInfosModel->where($where)->select();
+       
+       $where_up['operator_id'] = $user['id'];
+       $where_up['status'] = UP_CHECK_STATUS;
+       $up_list = $checkInfosModel->where($where_up)->select();
+       
+       $where_done['operator_id'] = $user['id'];
+       $where_done['status'] = DONE_CHECK_STATUS;
+       $done_list = $checkInfosModel->where($where_done)->select();
+        
+        $this->assign("new_list",$new_list);
+        $this->assign("up_list",$up_list);
+        $this->assign("done_list",$done_list);
+       
+        $this->assign("count_new",count($new_list));
+        $this->assign("count_up",count($up_list));
+        $this->assign("count_done",count($done_list));
+         
         return $this->fetch();
     }
 
@@ -71,14 +96,14 @@ class CheckController extends UserBaseController
        
       //交易信息
       $check_info= Db::name('check_infos')->where(['auction_id' => $auction_id])->find();
-//      $check_info_array= array();
-//       if($check_info){          
-//           $check_info_array = unserialize($check_info);
-//       }
+       if($check_info){          
+          $check_info['trade_info'] = unserialize($check_info['trade_info']);
+          $check_info['exterior_info'] = unserialize($check_info['exterior_info']);
+      
+       }
 
       $this->assign("check_info_array",$check_info);
-      $this->assign("trade_info",unserialize($check_info['trade_info']));
-      $this->assign("exterior_info",unserialize($check_info['exterior_info']));
+     
      
       //检测参数
       $checkPointModel = new CheckPointModel();
@@ -155,6 +180,9 @@ class CheckController extends UserBaseController
             $arrData      = $this->request->post();
             $photo_names  = $this->request->post('photo_names/a');
             $photo_urls   =$this->request->post('photo_urls/a');
+            $file_names  = $this->request->post('file_names/a');
+            $file_urls   =$this->request->post('file_urls/a');
+            
             if (!empty($photo_names) && !empty($photo_urls)) {
                 $arrData['pics'] = [];
                 foreach ($photo_urls as $key => $url) {
@@ -162,7 +190,18 @@ class CheckController extends UserBaseController
                     array_push( $arrData['pics'], ["url" => $photoUrl, "name" => $photo_names[$key]]);
                 }
             }
+            
+            if (!empty($file_names) && !empty($file_urls)) {
+                 $arrData['vedio_info'] = [];
+                foreach ($file_urls as $key => $url) {
+                    $fileUrl = cmf_asset_relative_url($url);
+                    array_push( $arrData['vedio_info'], ["url" => $fileUrl, "name" => $file_names[$key]]);
+                }
+            }
+            
             $arrData['pics'] = serialize( $arrData['pics']);
+            $arrData['vedio_info'] = serialize($arrData['vedio_info']);
+            
             $car_info= Db::name('car_info')->where(['auction_id' => $arrData['auction_id']])->find();
             $carInfoModel = new CarInfoModel();
             if($car_info){
@@ -188,18 +227,14 @@ class CheckController extends UserBaseController
         $admin_id = $user['id'];
         if ($this->request->isPost()) {
     
-            $result = $this->validate($this->request->param(), 'AuctionCar.add_trade');
-            $result =true;
-            if ($result !== true) {
-                    $this->error($result);
-                } else {
-                        $trade_info                 = $this->request->post('trade_info/a');
-                        $data['check_date']         = $this->request->post('check_date');
-                        $data['check_place']        = $this->request->post('check_place');
-                        $data['auction_id']         = $this->request->post('auction_id');
+           
+                        $arrData['trade_info']         = $this->request->post('trade_info/a');
+                        $arrData['check_date']         = $this->request->post('check_date');
+                        $arrData['check_place']        = $this->request->post('check_place');
+                        $arrData['auction_id']         = $this->request->post('auction_id');
                         
-                        $data['operator_id']        = $admin_id;
-                        $data['operator']           = $user['user_nickname'];
+                        $arrData['operator_id']        = $admin_id;
+                        $arrData['operator']           = $user['user_nickname'];
                         $photo_names                = $this->request->post('photo_names/a');
                         $photo_urls                 =$this->request->post('photo_urls/a');
                         
@@ -209,16 +244,24 @@ class CheckController extends UserBaseController
                                 $photoUrl = cmf_asset_relative_url($url);
                                 array_push( $pics, ["url" => $photoUrl, "name" => $photo_names[$key]]);
                             }
+                        $arrData['trade_info']['pics'] =  $pics;
                         }
-                        
-                        $trade_info['pics']         =  $pics;
-                        $data['trade_info']         = serialize($trade_info);
-                        
-                        $user = Db::name('check_infos')->insert($data);
+                        $arrData['trade_info'] = serialize($arrData['trade_info']) ;
+                        $checkInfosModel = new CheckInfosModel();
+                        $check_info= $checkInfosModel->where(['auction_id' => $arrData['auction_id']])->find();
                        
-                        $this->success("添加成功！", url("user/check/add",array("auction_id"=>$data['auction_id'])));
+                        if($check_info){
+                        
+                            $checkInfosModel->allowField(true)->save($arrData,['id'=>$check_info['id']]);
+                        }else{
+                        
+                            $checkInfosModel->allowField(true)->save($arrData);
+                        }
+                       
+                       
+                        $this->success("添加成功！", url("user/check/add",array("auction_id"=>$arrData['auction_id'])));
                     
-                }
+               
              
     
         }
@@ -238,16 +281,16 @@ class CheckController extends UserBaseController
                
                 $trade_info                 = $this->request->post($sub_info.'/a');
                  
-                $data['auction_id']         = $this->request->post('auction_id');
+                $arrData['auction_id']         = $this->request->post('auction_id');
                 
                 
                  
                  
-                $data[$sub_info]         = serialize($trade_info);
-                $auction_id = $data['auction_id'];
+                $arrData[$sub_info]         = serialize($trade_info);
+                $auction_id = $arrData['auction_id'];
                 $check_info= Db::name('check_infos')->where(["auction_id" =>$auction_id])->find();
                 $checkInfosModel =new CheckInfosModel();
-                $checkInfosModel->allowField([$sub_info])->save($data, ['id'=>$check_info['id']]);
+                $checkInfosModel->allowField([$sub_info])->save($arrData, ['id'=>$check_info['id']]);
                  
                 $this->success("添加成功！", url("user/check/add",array("auction_id"=>$auction_id)));
     
